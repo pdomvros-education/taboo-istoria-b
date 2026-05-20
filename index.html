@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Βυζαντινή Ιστορία - Taboo (Β' Γυμνασίου)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700;900&family=Share+Tech+Mono&family=Fredoka:wght@400;600;700&family=Jura:wght@400;600;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #10002b;
+            --panel-bg: rgba(255, 255, 255, 0.11);
+            --panel-strong: rgba(16, 0, 43, 0.78);
+            --neon-green: #62ff87;
+            --neon-red: #ff4d8d;
+            --neon-blue: #3bf5ff;
+            --neon-yellow: #ffe66d;
+            --purple-pop: #9d4edd;
+            --orange-pop: #ffb703;
+            --text-main: #f8fbff;
+            --text-soft: rgba(248, 251, 255, 0.75);
+            --shadow-pop: 0 24px 70px rgba(0, 0, 0, 0.38);
+            --radius-big: 28px;
+            --radius-mid: 18px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html { min-height: 100%; }
+
+        body { 
+            font-family: 'Fredoka', sans-serif; 
+            background:
+                radial-gradient(circle at 10% 15%, rgba(255, 77, 141, 0.32), transparent 26rem),
+                radial-gradient(circle at 90% 10%, rgba(59, 245, 255, 0.30), transparent 24rem),
+                radial-gradient(circle at 50% 92%, rgba(157, 78, 221, 0.35), transparent 28rem),
+                linear-gradient(135deg, #10002b 0%, #240046 42%, #001d3d 100%);
+            color: var(--text-main); 
+            text-align: center; 
+            margin: 0; 
+            padding: 18px 12px 60px 12px; /* Bottom padding for footer */
+            min-height: 100vh;
+            overflow-x: hidden; 
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            isolation: isolate;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 85%);
+            animation: gridFloat 18s linear infinite;
+        }
+
+        body::after {
+            content: "🎯  🕵️  💬  ⚡  🎮  🔥";
+            position: fixed;
+            inset: auto -5% 8% -5%;
+            z-index: -1;
+            color: rgba(255,255,255,0.08);
+            font-size: clamp(2rem, 5vw, 4rem);
+            letter-spacing: clamp(1rem, 3vw, 4rem);
+            white-space: nowrap;
+            transform: rotate(-8deg);
+            filter: blur(0.2px);
+            pointer-events: none;
+            animation: emojiDrift 16s ease-in-out infinite alternate;
+        }
+
+        body.lang-gr { font-family: 'Jura', sans-serif; }
+        .mono-font { font-family: 'Share Tech Mono', monospace; }
+        body.lang-gr .mono-font { font-family: 'Roboto Mono', monospace; }
+
+        /* --- Corner Logo --- */
+        .corner-logo {
+            position: fixed; 
+            top: 16px; 
+            right: 16px; 
+            width: 70px; 
+            height: 70px;
+            border-radius: 50%; /* Στρογγυλό πλαίσιο */
+            object-fit: cover; 
+            background: #ffffff; /* Solid white background */
+            z-index: 1000; 
+            border: 2px solid rgba(255,255,255,0.22);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), 0 0 20px rgba(59,245,255,0.2);
+            padding: 2px; /* Χώρος εσωτερικά για να φαίνεται όμορφο */
+        }
+
+        /* --- Footer --- */
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(16, 0, 43, 0.85);
+            color: rgba(255, 255, 255, 0.65);
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+            z-index: 50;
+            border-top: 1px solid rgba(255,255,255,0.12);
+            text-align: center;
+            backdrop-filter: blur(14px);
+        }
+
+        /* --- Intro Screen Styles --- */
+        #intro-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            width: min(1180px, 100%);
+            margin: 0 auto;
+            animation: popIn 0.55s cubic-bezier(.2,1.1,.2,1);
+            padding-top: 20px;
+        }
+
+        .hero-card {
+            width: min(600px, 100%);
+            position: relative;
+            border-radius: clamp(16px, 3vw, 24px);
+            overflow: hidden;
+            box-shadow: 0 28px 80px rgba(0,0,0,0.44), 0 0 0 1px rgba(255,255,255,0.15);
+            background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.07));
+            backdrop-filter: blur(18px);
+            padding: clamp(20px, 4vw, 30px) clamp(10px, 3vw, 15px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: clamp(1.2rem, 4vw, 1.75rem);
+            text-shadow: 0 3px 0 rgba(255, 77, 141, 0.72), 0 0 15px rgba(255,255,255,0.18);
+            text-transform: uppercase;
+        }
+
+        .intro-image {
+            max-width: min(320px, 80%); /* Αυξήθηκε κατά 60% (από 200px σε 320px) */
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius-mid);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28), 0 0 16px rgba(59,245,255,0.26);
+            margin-bottom: 15px;
+            border: 2px solid rgba(255,255,255,0.22);
+        }
+
+        .instructions {
+            background: rgba(16, 0, 43, 0.55);
+            border-left: 4px solid var(--neon-blue);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), 0 10px 24px rgba(0,0,0,0.22);
+            max-width: 500px;
+            width: 100%;
+            text-align: left;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .instructions h2 {
+            margin-top: 0;
+            color: var(--neon-blue);
+            font-size: 1.1rem;
+            text-align: center;
+            text-shadow: 0 2px 5px rgba(59, 245, 255, 0.4);
+        }
+
+        .instructions ul {
+            padding-left: 15px;
+            margin-bottom: 0;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            font-size: clamp(0.8rem, 2.5vw, 0.85rem);
+        }
+        .instructions li::marker { color: var(--neon-yellow); font-weight: 900; }
+
+        /* --- Game Screen Styles --- */
+        #game-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+            width: 100%;
+            max-width: 1180px;
+            margin: 0 auto;
+            animation: popIn 0.5s cubic-bezier(.2,1.1,.2,1);
+            padding-top: 10px;
+        }
+
+        .hud {
+            display: flex;
+            width: 100%;
+            max-width: 550px;
+            gap: 12px;
+            align-items: stretch;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .timer, .score-box {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: var(--radius-mid);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+            font-weight: 900;
+            color: white;
+            box-shadow: var(--shadow-pop), inset 0 0 0 2px rgba(255,255,255,0.05);
+            padding: 10px 15px;
+            backdrop-filter: blur(18px);
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, rgba(59,245,255,0.15), rgba(157,78,221,0.15));
+        }
+
+        .card {
+            background:
+                linear-gradient(135deg, rgba(255,77,141,0.15), rgba(157,78,221,0.10)),
+                rgba(255,255,255,0.10);
+            border: 1px solid rgba(255,255,255,0.19);
+            border-radius: var(--radius-mid);
+            width: 100%;
+            max-width: 550px;
+            padding: clamp(15px, 4vw, 25px);
+            box-shadow: var(--shadow-pop), inset 0 0 0 2px rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            backdrop-filter: blur(18px);
+            transition: background 0.3s;
+        }
+
+        .card::before, .card::after {
+            content: "";
+            position: absolute;
+            inset: 8px;
+            border: 2px dashed rgba(255,255,255,0.18);
+            border-radius: 16px;
+            pointer-events: none;
+        }
+
+        .card-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 0.65rem;
+            color: #14021d;
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-yellow));
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-weight: 900;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.22);
+            position: relative;
+            z-index: 2;
+        }
+
+        .word {
+            font-size: clamp(1.25rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: clamp(1px, 0.5vw, 3px);
+            text-shadow:
+                0 3px 0 rgba(255, 77, 141, 0.72),
+                0 6px 0 rgba(59, 245, 255, 0.16),
+                0 0 15px rgba(255,255,255,0.18);
+            margin-bottom: 15px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .taboo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .taboo-list li {
+            background: rgba(255, 77, 141, 0.2);
+            border: 1px solid rgba(255, 77, 141, 0.4);
+            padding: 8px 16px;
+            margin: 0 auto;
+            border-radius: 8px;
+            color: white;
+            font-size: clamp(0.75rem, 3vw, 1rem);
+            font-weight: bold;
+            text-shadow: 0 0 6px rgba(255, 77, 141, 0.6);
+            width: fit-content;
+            text-transform: uppercase;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 550px;
+        }
+
+        button {
+            padding: 10px 18px;
+            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
+            font-weight: 900;
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.24);
+            color: #12021b;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.03);
+            filter: saturate(1.15);
+            box-shadow: 0 14px 28px rgba(0,0,0,0.36), 0 0 20px rgba(255,255,255,0.16);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0) scale(0.98);
+        }
+
+        button:disabled {
+            background: rgba(255,255,255,0.05) !important;
+            color: rgba(255,255,255,0.3) !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #btn-enter { background: linear-gradient(135deg, #ff4d8d, #ffb703 48%, #62ff87); }
+        #btn-start { background: linear-gradient(135deg, #3bf5ff, #9d4edd); color: white; }
+        #btn-correct { background: linear-gradient(135deg, #62ff87, #007f5f); }
+        #btn-skip { background: linear-gradient(135deg, #ff4d8d, #ffb703); }
+
+        .card-count {
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes gridFloat { from { background-position: 0 0; } to { background-position: 84px 84px; } }
+        @keyframes emojiDrift { from { transform: rotate(-8deg) translateX(-2%); } to { transform: rotate(-8deg) translateX(2%); } }
+
+        /* --- Mobile Optimization --- */
+        @media (max-width: 560px) {
+            .corner-logo {
+                width: 50px; 
+                height: 50px; 
+                top: 10px; 
+                right: 10px;
+                border-width: 1px;
+            }
+            body {
+                padding-top: 10px;
+            }
+            #intro-screen, #game-screen {
+                padding-top: 40px; 
+            }
+            .hud { flex-direction: row; flex-wrap: nowrap;} 
+            .controls { flex-direction: column; align-items: stretch; }
+            button { width: 100%; padding: 12px; }
+            footer { padding: 8px 10px; font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body class="lang-gr">
+
+    <img src="logo.png" alt="Logo" class="corner-logo" onerror="this.style.display='none'">
+
+    <audio id="audio-tick" src="tick.mp3" loop></audio>
+    <audio id="audio-success" src="success.mp3"></audio>
+    <audio id="audio-alarm" src="alarm.mp3"></audio>
+
+    <div id="intro-screen">
+        <div class="hero-card">
+            <h1 class="mono-font">Taboo Ιστορίας Β Γυμνασίου</h1>
+            
+            <img src="image.png" alt="Βυζαντινή Ιστορία" class="intro-image" onerror="this.style.display='none'">
+            
+            <div class="instructions mono-font">
+                <h2>Οδηγίες Παιχνιδιού</h2>
+                <ul>
+                    <li>Χωριστείτε σε <strong>δύο ομάδες</strong>.</li>
+                    <li>Προσπαθήστε να περιγράψετε την <strong>κύρια λέξη</strong> χωρίς να πείτε καμία από τις απαγορευμένες!</li>
+                    <li>Όταν η ομάδα βρει τη λέξη, πατήστε <strong>Σωστό</strong> για +1 πόντο.</li>
+                    <li>Αν κολλήσετε και δεν μπορείτε να την περιγράψετε, πατήστε <strong>Πάσο</strong> (αλλάζει η κάρτα, ο χρόνος συνεχίζει).</li>
+                </ul>
+            </div>
+
+            <button id="btn-enter" class="mono-font" onclick="showGame()">Έναρξη Παιχνιδιού 🚀</button>
+        </div>
+    </div>
+
+    <div id="game-screen">
+        <h1 class="mono-font" style="font-size: clamp(1rem, 2vw, 1.25rem); margin-bottom: 10px;">Taboo Ιστορίας</h1>
+        
+        <div class="hud">
+            <div class="timer mono-font" id="timerDisplay">Χρόνος: 60s</div>
+            <div class="score-box mono-font" id="scoreDisplay">Σκορ: 0</div>
+        </div>
+
+        <div class="card" id="gameCard">
+            <div class="card-label mono-font">ΛΕΞΗ ΣΤΟΧΟΣ</div>
+            <div class="word" id="targetWord">ΕΤΟΙΜΟΙ;</div>
+            <ul class="taboo-list mono-font" id="tabooWords">
+                <li>Πατήστε</li>
+                <li>Έναρξη Χρόνου</li>
+                <li>για να ξεκινήσει</li>
+                <li>ο γύρος!</li>
+            </ul>
+        </div>
+
+        <div class="controls">
+            <button id="btn-start" class="mono-font" onclick="startTimer()">⏱️ Έναρξη Χρόνου</button>
+            <button id="btn-correct" class="mono-font" onclick="markCorrect()" disabled>✔️ Σωστό</button>
+            <button id="btn-skip" class="mono-font" onclick="skipCard()" disabled>⏭️ Πάσο</button>
+        </div>
+        
+        <div class="card-count mono-font" id="cardCounter"> </div>
+    </div>
+
+    <footer class="mono-font">Δημιουργία: Παναγιώτης Δόμβρος, Εκπαιδευτικός Αγγλικής Γλώσσας & Θεατρολόγος, Διευθυντής 1ου Γυμνασίου Πυλαίας</footer>
+
+    <script>
+        const cards = [
+            // Μέρος 1ο
+            { target: "Κωνσταντινούπολη", forbidden: ["Νέα Ρώμη", "Βυζάντιο", "Κωνσταντίνος", "Εγκαίνια"] },
+            { target: "Διάταγμα των Μεδιολάνων", forbidden: ["313", "Ανεξιθρησκία", "Κωνσταντίνος", "Λικίνιος"] },
+            { target: "Α' Οικουμενική Σύνοδος", forbidden: ["325", "Νίκαια", "Αιρέσεις", "Εκκλησία"] },
+            { target: "Χριστόγραμμα", forbidden: ["Σύμβολο", "Σημαία", "Λάβαρο", "Νομίσματα"] },
+            { target: "Χρυσό Νόμισμα", forbidden: ["Οικονομία", "Σταθερό", "Κωνσταντίνος", "Μέτρο"] },
+            { target: "Ιουστινιανός Α'", forbidden: ["Αγία Σοφία", "Θεοδώρα", "Στάση Νίκα", "Οικουμένη"] },
+            { target: "Στάση του Νίκα", forbidden: ["532", "Εξέγερση", "Ιππόδρομος", "Πράσινοι/Βένετοι"] },
+            { target: "Θεοδώρα (Ιουστινιανού)", forbidden: ["Αυτοκράτειρα", "Στάση Νίκα", "Ιουστινιανός", "Βοήθεια"] },
+            { target: "Ιουστινιάνειος Κώδικας", forbidden: ["Νόμοι", "Δίκαιο", "Αυτοκράτορας", "Κωδικοποίηση"] },
+            { target: "Πανδέκτης", forbidden: ["Ιουστινιανός", "Γνώμες", "Νομικοί", "Ρωμαίοι"] },
+            { target: "Νεαρές (Νόμοι)", forbidden: ["Νέοι", "Ελληνικά", "Ιουστινιανός", "Δίκαιο"] },
+            { target: "Αγία Σοφία", forbidden: ["Ανθέμιος", "Ισίδωρος", "Τρούλος", "Βασιλική"] },
+            { target: "Ηράκλειος", forbidden: ["Στρατηγός", "Πέρσες", "Τίμιος Σταυρός", "Θέματα"] },
+            { target: "Μάχη της Νινευί", forbidden: ["627", "Ηράκλειος", "Πέρσες", "Νίκη"] },
+            { target: "Τίμιος Σταυρός", forbidden: ["Πέρσες", "Ηράκλειος", "Ανάκτηση", "Θρησκεία"] },
+            { target: "Θέματα", forbidden: ["Διοίκηση", "Περιφέρειες", "Στρατός", "Στρατηγός"] },
+            { target: "Στρατιωτόπια", forbidden: ["Κτήματα", "Αγρότες", "Στρατιώτες", "Θέματα"] },
+            { target: "Ελληνική Γλώσσα", forbidden: ["Επίσημη", "Διοίκηση", "Στρατός", "Λατινικά"] },
+            { target: "Νικηφόρος Α'", forbidden: ["Κακώσεις", "Φόροι", "Οικονομία", "Χωρικοί"] },
+            { target: "Καπνικός Φόρος", forbidden: ["Νικηφόρος Α'", "Νοικοκυριό", "Κακώσεις", "Οικονομία"] },
+            { target: "Εικονομαχία", forbidden: ["Εικόνες", "Λατρεία", "Λέων Γ'", "Ειδωλολατρία"] },
+            { target: "Ιωάννης Δαμασκηνός", forbidden: ["Θεολόγος", "Εικονόφιλος", "Υπερασπιστής", "Εικονομαχία"] },
+            { target: "Ειρήνη η Αθηναία", forbidden: ["Σύνοδος", "787", "Εικόνες", "Τιμητική προσκύνηση"] },
+            { target: "Θεοδώρα (Εικονομαχία)", forbidden: ["Αναστήλωση", "843", "Εικόνες", "Οριστική"] },
+
+            // Μέρος 2ο
+            { target: "Μιχαήλ Γ'", forbidden: ["Ανάπτυξη", "Βάρδας", "Εικονομαχία", "Νέα Εποχή"] },
+            { target: "Καίσαρ Βάρδας", forbidden: ["Θείος", "Μιχαήλ Γ'", "Μαγναύρα", "Διοίκηση"] },
+            { target: "Σχολή της Μαγναύρας", forbidden: ["Πανεπιστήμιο", "Βάρδας", "Λέων", "Φιλοσοφία"] },
+            { target: "Λέων ο Μαθηματικός", forbidden: ["Διευθυντής", "Μαγναύρα", "Άραβες", "Βαγδάτη"] },
+            { target: "Φώτιος", forbidden: ["Μυριόβιβλος", "Λόγιος", "Αρχαία", "Σλάβοι"] },
+            { target: "Άλωση του Αμορίου", forbidden: ["838", "Άραβες", "Φρούριο", "Μικρά Ασία"] },
+            { target: "Ακρίτες", forbidden: ["Σύνορα", "Στρατιώτες", "Τραγούδια", "Φρουροί"] },
+            { target: "Διγενής Ακρίτας", forbidden: ["Έπος", "Τραγούδι", "Ήρωας", "Λογοτεχνία"] },
+            { target: "Δυνατοί", forbidden: ["Πλούσιοι", "Αριστοκράτες", "Κτήματα", "Πένητες"] },
+            { target: "Πένητες", forbidden: ["Φτωχοί", "Αγρότες", "Πάροικοι", "Δυνατοί"] },
+            { target: "Πρόχειρος Νόμος", forbidden: ["Μακεδονική", "Συλλογή", "Νόμοι", "Εύχρηστη"] },
+            { target: "Επαρχικόν Βιβλίον", forbidden: ["Κανόνες", "Συντεχνίες", "Επαγγελματίες", "Κωνσταντινούπολη"] },
+            { target: "Αλληλέγγυον", forbidden: ["1002", "Φόροι", "Δυνατοί", "Φτωχοί"] },
+            { target: "Βασίλειος Β'", forbidden: ["Βούλγαροι", "Σαμουήλ", "Σπερχειός", "Κλειδί"] },
+            { target: "Συμεών", forbidden: ["Βούλγαροι", "Αυτοκράτορας", "Πολιορκία", "Ρωμαίοι"] },
+            { target: "Σαμουήλ", forbidden: ["Τσάρος", "Αχρίδα", "Βούλγαροι", "Βασίλειος Β'"] },
+            { target: "Μάχη στο Κλειδί", forbidden: ["1014", "Βασίλειος Β'", "Σαμουήλ", "Βούλγαροι"] },
+            { target: "Μάχη του Ματζικέρτ", forbidden: ["1071", "Σελτζούκοι", "Τούρκοι", "Μισθοφόροι"] },
+            { target: "Πρόνοια (Θεσμός)", forbidden: ["Αλέξιος Α'", "Κομνηνοί", "Αγροκτήματα", "Στρατός"] },
+            { target: "Μάχη του Μυριοκέφαλου", forbidden: ["1176", "Μανουήλ", "Σελτζούκοι", "Εξισλαμισμός"] },
+            { target: "Χρυσόβουλο του 1082", forbidden: ["Βενετοί", "Αλέξιος Α'", "Εμπόριο", "Φόροι"] },
+            { target: "Σχίσμα", forbidden: ["1054", "Εκκλησίες", "Ορθόδοξη", "Ρωμαιοκαθολική"] },
+
+            // Μέρος 3ο
+            { target: "Σταυροφορίες", forbidden: ["Πάπας", "Άγιοι Τόποι", "Ιππότες", "Δύση"] },
+            { target: "Άλωση του 1204", forbidden: ["Τέταρτη Σταυροφορία", "Φράγκοι", "Κωνσταντινούπολη", "Λεηλασία"] },
+            { target: "Μωάμεθ Β' Πορθητής", forbidden: ["Σουλτάνος", "Πολιορκία", "1453", "Άλωση"] },
+            { target: "Κωνσταντίνος ΙΑ'", forbidden: ["Αυτοκράτορας", "Άλωση", "1453", "Τείχη"] },
+            { target: "Γενίτσαροι", forbidden: ["Οθωμανοί", "Στρατός", "Τείχη", "Άλωση"] },
+            { target: "Τρίτη Ρώμη", forbidden: ["Μόσχα", "Ρώσοι", "Κληρονόμοι", "Βυζάντιο"] },
+            { target: "Καρλομάγνος", forbidden: ["Φράγκοι", "Αυτοκράτορας", "800", "Πάπας"] },
+            { target: "Συνθήκη του Βερντέν", forbidden: ["843", "Διάσπαση", "Καρλομάγνος", "Ευρώπη"] },
+            { target: "Καρολίδεια Αναγέννηση", forbidden: ["Γράμματα", "Σχολεία", "Μοναστήρια", "Καρλομάγνος"] },
+            { target: "Πυξίδα", forbidden: ["Ανακαλύψεις", "Όργανο", "Προσανατολισμός", "Ναυτικοί"] },
+            { target: "Καραβέλα", forbidden: ["Πλοίο", "Ανακαλύψεις", "Γρήγορο", "Ασφαλές"] },
+            { target: "Βάσκο ντε Γκάμα", forbidden: ["Πορτογάλος", "Ινδίες", "Αφρική", "1498"] },
+            { target: "Χριστόφορος Κολόμβος", forbidden: ["Αμερική", "1492", "Ισπανία", "Ινδίες"] },
+            { target: "Φερδινάνδος Μαγγελάνος", forbidden: ["Γύρος κόσμου", "Σφαιρική", "1519", "Θαλασσοπόρος"] },
+            { target: "Συνθήκη της Τορντεζίλας", forbidden: ["1494", "Πορτογάλοι", "Ισπανοί", "Μοίρασμα"] }
+        ];
+
+        let currentCards = [...cards];
+        let timer;
+        let timeLeft = 60;
+        let isPlaying = false;
+        let isPaused = false; 
+        let score = 0;
+
+        const audioTick = document.getElementById('audio-tick');
+        const audioSuccess = document.getElementById('audio-success');
+        const audioAlarm = document.getElementById('audio-alarm');
+        const cardElement = document.getElementById('gameCard');
+
+        // Μετάβαση από την αρχική οθόνη στο παιχνίδι
+        function showGame() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'flex';
+        }
+
+        // Φέρνει την επόμενη κάρτα
+        function nextCard() {
+            if (currentCards.length === 0) {
+                currentCards = [...cards]; 
+            }
+            
+            const randomIndex = Math.floor(Math.random() * currentCards.length);
+            const card = currentCards.splice(randomIndex, 1)[0];
+
+            document.getElementById('targetWord').textContent = card.target;
+            const tabooUl = document.getElementById('tabooWords');
+            tabooUl.innerHTML = '';
+            
+            card.forbidden.forEach(word => {
+                const li = document.createElement('li');
+                li.textContent = word;
+                tabooUl.appendChild(li);
+            });
+        }
+
+        // Πατιέται "Σωστό"
+        function markCorrect() {
+            if (!isPlaying || isPaused) return;
+            
+            isPaused = true;
+            
+            // 1. Σταματάμε τον χρόνο και τον ήχο του ρολογιού αμέσως
+            clearInterval(timer);
+            audioTick.pause();
+            
+            // 2. Επαναφορά της έντασης (σε περίπτωση που είχε κάνει fade out πριν) και play
+            audioSuccess.volume = 1.0;
+            audioSuccess.currentTime = 0;
+            audioSuccess.play();
+            
+            // Οπτικό εφεδάκι στην κάρτα
+            cardElement.style.background = "linear-gradient(135deg, rgba(98, 255, 135, 0.15), rgba(255, 255, 255, 0.10))";
+            
+            // 3. Απενεργοποίηση κουμπιών κατά την αναμονή
+            document.getElementById('btn-correct').disabled = true;
+            document.getElementById('btn-skip').disabled = true;
+            
+            // 4. Αύξηση σκορ άμεσα
+            score++;
+            document.getElementById('scoreDisplay').textContent = `Σκορ: ${score}`;
+            
+            // Ξεκινάει το fade out μετά από 3.5 δευτερόλεπτα
+            let fadeOutInterval;
+            setTimeout(() => {
+                fadeOutInterval = setInterval(() => {
+                    if (audioSuccess.volume > 0.05) {
+                        audioSuccess.volume -= 0.05; // Μειώνει την ένταση σταδιακά
+                    } else {
+                        audioSuccess.volume = 0;
+                        clearInterval(fadeOutInterval);
+                    }
+                }, 75); // 1.5 δευτερόλεπτο fade out συνολικά
+            }, 3500);
+
+            // 5. Περιμένουμε ακριβώς 5 δευτερόλεπτα (5000 ms) συνολικά
+            setTimeout(() => {
+                // Καθαρίζουμε το interval αν δεν έχει προλάβει
+                clearInterval(fadeOutInterval);
+                audioSuccess.pause();
+                audioSuccess.currentTime = 0;
+                audioSuccess.volume = 1.0; // Επαναφορά έντασης για την επόμενη φορά
+
+                // Αλλαγή κάρτας & επαναφορά χρωμάτων
+                cardElement.style.background = "linear-gradient(135deg, rgba(255,77,141,0.15), rgba(157,78,221,0.10)), rgba(255,255,255,0.10)";
+                nextCard();
+                
+                // Εμφανίζεται/ενεργοποιείται ξανά το πλήκτρο έναρξης
+                document.getElementById('btn-start').disabled = false;
+                
+                // Το παιχνίδι τίθεται σε παύση περιμένοντας νέα έναρξη
+                isPlaying = false;
+                isPaused = false;
+                
+            }, 5000);
+        }
+
+        // Πατιέται "Πάσο"
+        function skipCard() {
+            if (!isPlaying || isPaused) return;
+            
+            // Απλά αλλάζουμε κάρτα. Ο χρόνος και το tick.mp3 συνεχίζουν κανονικά.
+            nextCard();
+        }
+
+        // Η αντίστροφη μέτρηση κάθε 1 δευτερόλεπτο
+        function gameTick() {
+            timeLeft--;
+            document.getElementById('timerDisplay').textContent = `Χρόνος: ${timeLeft}s`;
+            
+            if (timeLeft <= 10) {
+                document.getElementById('timerDisplay').style.color = 'var(--neon-red)';
+            }
+
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+
+        // Όταν τελειώνει ο χρόνος
+        function endGame() {
+            clearInterval(timer);
+            isPlaying = false;
+            isPaused = false;
+            
+            audioTick.pause();
+            audioTick.currentTime = 0;
+            audioAlarm.currentTime = 0;
+            audioAlarm.play();
+
+            document.getElementById('timerDisplay').textContent = "ΤΕΛΟΣ!";
+            cardElement.style.background = "linear-gradient(135deg, rgba(255,77,141,0.15), rgba(157,78,221,0.10)), rgba(255,255,255,0.10)";
+            document.getElementById('targetWord').textContent = "---";
+            document.getElementById('tabooWords').innerHTML = "<li>Ο χρόνος έληξε</li><li>Σημειώστε το σκορ</li><li>και αλλάξτε ομάδα!</li>";
+            
+            document.getElementById('btn-start').disabled = false;
+            document.getElementById('btn-correct').disabled = true;
+            document.getElementById('btn-skip').disabled = true;
+        }
+
+        // Έναρξη του γύρου
+        function startTimer() {
+            if (isPlaying) return; 
+            
+            isPlaying = true;
+            isPaused = false;
+            timeLeft = 60;
+            
+            document.getElementById('timerDisplay').textContent = `Χρόνος: ${timeLeft}s`;
+            document.getElementById('timerDisplay').style.color = 'white';
+            document.getElementById('scoreDisplay').textContent = `Σκορ: ${score}`;
+            cardElement.style.background = "linear-gradient(135deg, rgba(255,77,141,0.15), rgba(157,78,221,0.10)), rgba(255,255,255,0.10)";
+            
+            document.getElementById('btn-start').disabled = true;
+            document.getElementById('btn-correct').disabled = false;
+            document.getElementById('btn-skip').disabled = false;
+            
+            audioAlarm.pause();
+            audioAlarm.currentTime = 0;
+            audioTick.play();
+            
+            // Δεν καλούμε την nextCard() εδώ, ώστε να διατηρηθεί η κάρτα που μόλις φορτώθηκε μετά το σωστό
+            if (document.getElementById('targetWord').textContent === "ΕΤΟΙΜΟΙ;" || document.getElementById('targetWord').textContent === "---") {
+                nextCard();
+            }
+
+            timer = setInterval(gameTick, 1000);
+        }
+    </script>
+</body>
+</html>
